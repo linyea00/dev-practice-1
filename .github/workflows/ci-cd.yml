@@ -11,10 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+        uses: actions/checkout@v4
 
       - name: Build Docker image
         run: docker build -t flask-app .
@@ -22,5 +19,15 @@ jobs:
       - name: Run Docker container
         run: docker run -d -p 5000:5000 flask-app
 
+      - name: Wait for container to start
+        run: |
+          sleep 5
+
       - name: Test the app
         run: curl -f http://localhost:5000
+
+      - name: Clean up
+        if: always() # Guarantees execution even if previous steps fail
+        run: |
+          docker stop $(docker ps -q)
+          docker rm $(docker ps -a -q)
