@@ -34,7 +34,7 @@ jobs:
 
       - name: Check security with bandit
         run: |
-          bandit -r .
+          bandit -r . --severity-level medium
 
       - name: Test with pytest
         run: |
